@@ -15,7 +15,7 @@ def main():
   )
   if st.button("Tính toán"):
     result = fact(number)
-    st.write(f"Gia thua của {number} la {result}")
-if __name__=="__main__":
+    st.write(f"Giai thừa của {number} là {result}")
+if __name__ == "__main__":
   main()
   
