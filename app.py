@@ -143,7 +143,7 @@ def main():
             
         # Logic chuyển đổi văn bản (Chỉ chạy khi có dữ liệu và người dùng bấm nút)
         if st.session_state.audio_buffer is not None:
-            if st.button('✅ Chuyển đổi giọng nói'):
+            if st.button('✅ Chuyển đổi ghi âm thành văn bản'):
                temp_wav_path = "mic_recording_temp.wav"
                       
                try:
