@@ -21,7 +21,7 @@ def transcribe_audio_file(uploaded_file):
     """
     temp_input_path = "temp_input_audio" + os.path.splitext(uploaded_file.name)[1]
     temp_wav_path = "temp_converted_audio.wav"
-    
+    st.info("Gọi hàm transcribe_audio_file")
     try:
         # 1. Lưu file đã tải lên vào tệp tạm thời
         st.info("Đang mở file tạm....")
