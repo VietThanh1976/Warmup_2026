@@ -110,7 +110,7 @@ def main():
         st.session_state.audio_buffer = audio_data['bytes']
         st.audio(st.session_state.audio_buffer, format='audio/wav') # Hiển thị player
         
-    if st.session_state.audio_buffer is not None and st.button('✅ Chuyển đổi Giọng nói'):
+    if st.button('✅ Chuyển đổi Giọng nói'):
         
         # Tạo file WAV tạm thời từ buffer
         temp_wav_path = "mic_recording_temp.wav"
