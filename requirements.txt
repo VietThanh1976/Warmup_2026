@@ -1,4 +1,1 @@
 streamlit
-SpeechRecognition
-pyaudio
-python-docx
