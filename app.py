@@ -169,34 +169,34 @@ def main():
 # =========================================================================
 # HIỂN THỊ KẾT QUẢ VÀ TÙY CHỌN TẢI XUỐNG (Chung cho cả 2 phương thức)
 # =========================================================================
-if st.session_state.last_transcription_text:
-    st.markdown("---")
-    st.subheader("✅ Văn bản đã chuyển đổi:")
+    if st.session_state.last_transcription_text:
+        st.markdown("---")
+        st.subheader("✅ Văn bản đã chuyển đổi:")
 
-    # Hiển thị văn bản trong textarea
-    st.text_area("Kết quả:", st.session_state.last_transcription_text, height=250)
+        # Hiển thị văn bản trong textarea
+        st.text_area("Kết quả:", st.session_state.last_transcription_text, height=250)
     
-    # Chỉ hiển thị nút tải xuống nếu văn bản không phải là lỗi
-    if "Không thể" not in st.session_state.last_transcription_text and "Lỗi" not in st.session_state.last_transcription_text:
+        # Chỉ hiển thị nút tải xuống nếu văn bản không phải là lỗi
+        if "Không thể" not in st.session_state.last_transcription_text and "Lỗi" not in st.session_state.last_transcription_text:
         
-        col1, col2 = st.columns(2)
+            col1, col2 = st.columns(2)
     
-        # Nút tải xuống file DOCX
-        docx_bytes, docx_filename = create_docx(st.session_state.last_transcription_text)
-        col1.download_button(
-            label="💾 Tải xuống MS Word (.docx)",
-            data=docx_bytes,
-            file_name=docx_filename,
-            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        )
+            # Nút tải xuống file DOCX
+            docx_bytes, docx_filename = create_docx(st.session_state.last_transcription_text)
+            col1.download_button(
+                label="💾 Tải xuống MS Word (.docx)",
+                data=docx_bytes,
+                file_name=docx_filename,
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            )
         
-        # Tùy chọn tải xuống file TXT
-        col2.download_button(
-            label="📝 Tải xuống Văn bản thuần (.txt)",
-            data=st.session_state.last_transcription_text.encode('utf-8'),
-            file_name="transcribed_text.txt",
-            mime="text/plain"
-        )
+            # Tùy chọn tải xuống file TXT
+            col2.download_button(
+                label="📝 Tải xuống Văn bản thuần (.txt)",
+                data=st.session_state.last_transcription_text.encode('utf-8'),
+                file_name="transcribed_text.txt",
+                mime="text/plain"
+            )
 
 if __name__ == "__main__":
   main()
