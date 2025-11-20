@@ -96,33 +96,33 @@ def create_docx(text, filename="transcribed_document.docx"):
 # =========================================================================
 def main():
     # Đặt tiêu đề cho ứng dụng
-    st.title("🎤 ỨNG DỤNG CHUYỂN ÂM THANH THÀNH VĂN BẢN Ver1.0")
-    st.markdown("----------------*************----------------") 
+    st.title("🎤 ỨNG DỤNG CHUYỂN ÂM THANH THÀNH VĂN BẢN ver1.0")
+    st.markdown("-------------------------------------------------------------------------------------") 
     # Chọn phương thức nhập liệu
     method = st.radio(
     "Chọn phương thức nhập liệu:",
-    ('Tải lên File Âm thanh', 'Ghi âm trực tiếp từ Micro')
+    ('Tải lên File âm thanh', 'Ghi âm trực tiếp từ Micro')
     )
     ### PHƯƠNG THỨC 1: Tải lên File Âm thanh
-    if method == 'Tải lên File Âm thanh':
+    if method == 'Tải lên File âm thanh':
         uploaded_file = st.file_uploader(
         "Tải lên tệp âm thanh (ví dụ: .wav, .mp3):",
         type=['wav', 'mp3']
         )
         if uploaded_file is not None:
             # Nút chuyển đổi được đặt ở đây
-            if st.button('🚀 Chuyển đổi File thành Văn bản'):
+            if st.button('🚀 Chuyển đổi file thành văn bản'):
                 with st.spinner('Đang tải và xử lý file...'):
                     process_uploaded_file(uploaded_file)
     ### PHƯƠNG THỨC 2: Ghi âm trực tiếp từ Micro       
     elif method == 'Ghi âm trực tiếp từ Micro':
         st.subheader("🎙️ Ghi Âm Trực Tiếp")
-        st.caption("Sử dụng micro của trình duyệt (thay thế cho PyAudio).")
+        st.caption("Sử dụng micro của trình duyệt.")
 
         # Widget ghi âm
         audio_data = mic_recorder(
-            start_prompt="Bắt đầu Ghi Âm",
-            stop_prompt="Dừng Ghi Âm",
+            start_prompt="Bắt đầu ghi âm",
+            stop_prompt="Dừng ghi âm",
             key='mic_recorder',
             format="wav" 
         )
@@ -135,7 +135,7 @@ def main():
             
             # Nút TẢI XUỐNG File Âm thanh
             st.download_button(
-               label="⬇️ Tải xuống File Âm thanh (.wav)",
+               label="⬇️ Tải xuống file âm thanh (.wav)",
                data=st.session_state.last_audio_data,
                 file_name="ghi_am_mic.wav",
                 mime="audio/wav"
@@ -143,7 +143,7 @@ def main():
             
         # Logic chuyển đổi văn bản (Chỉ chạy khi có dữ liệu và người dùng bấm nút)
         if st.session_state.audio_buffer is not None:
-            if st.button('✅ Chuyển đổi Giọng nói'):
+            if st.button('✅ Chuyển đổi giọng nói'):
                temp_wav_path = "mic_recording_temp.wav"
                       
                try:
@@ -192,7 +192,7 @@ def main():
         
             # Tùy chọn tải xuống file TXT
             col2.download_button(
-                label="📝 Tải xuống Văn bản thuần (.txt)",
+                label="📝 Tải xuống văn bản dạng text (.txt)",
                 data=st.session_state.last_transcription_text.encode('utf-8'),
                 file_name="transcribed_text.txt",
                 mime="text/plain"
