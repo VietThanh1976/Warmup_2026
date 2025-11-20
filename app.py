@@ -120,7 +120,7 @@ def main():
         )
         # ======================================================
             
-    if st.button('✅ Chuyển đổi Giọng nói'):
+    if (st.session_state.audio_buffer is not None) and st.button('✅ Chuyển đổi Giọng nói'):
         
         # Tạo file WAV tạm thời từ buffer
         temp_wav_path = "mic_recording_temp.wav"
