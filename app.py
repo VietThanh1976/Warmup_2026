@@ -146,7 +146,7 @@ def main():
             if st.button('✅ Chuyển đổi Giọng nói'):
                temp_wav_path = "mic_recording_temp.wav"
                       
-                try:
+               try:
                     # Ghi bytes ra file tạm thời
                     with open(temp_wav_path, "wb") as f:
                         f.write(st.session_state.audio_buffer)
