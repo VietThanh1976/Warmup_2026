@@ -3,4 +3,9 @@ import streamlit as st
 st.write('Hello')
 st.write(55)
 st.divider()
-st.page_link("About","www.tuoitre.vn")
+file = st.file_uploader(
+  "Upload your file",
+  type=["pdf", "docx", "wav"]
+)
+if file:
+  st.write(f"{file}")
