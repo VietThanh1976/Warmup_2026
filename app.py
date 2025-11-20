@@ -12,8 +12,8 @@ import time
 r = sr.Recognizer()
 
 # Đặt tiêu đề cho ứng dụng
-st.title("🎤 Ứng Dụng Chuyển Giọng Nói Thành Văn Bản")
-st.markdown("Sử dụng **Streamlit** và thư viện **SpeechRecognition**")
+st.title("🎤 ỨNG DỤNG CHUYỂN ÂM THANH THÀNH VĂN BẢN Ver1.0")
+st.markdown("----------------*************----------------")
 
 def transcribe_audio_file(uploaded_file):
     """
@@ -109,7 +109,17 @@ def main():
     if audio_data:
         st.session_state.audio_buffer = audio_data['bytes']
         st.audio(st.session_state.audio_buffer, format='audio/wav') # Hiển thị player
-        
+        # ======================================================
+        # 👉 PHẦN CODE MỚI: NÚT TẢI XUỐNG FILE ÂM THANH
+        # ======================================================
+        st.download_button(
+            label="⬇️ Tải xuống File Âm thanh (.wav)",
+            data=st.session_state.audio_buffer,
+            file_name="ghi_am_mic.wav",
+            mime="audio/wav" # Định dạng MIME cho tệp WAV
+        )
+        # ======================================================
+            
     if st.button('✅ Chuyển đổi Giọng nói'):
         
         # Tạo file WAV tạm thời từ buffer
