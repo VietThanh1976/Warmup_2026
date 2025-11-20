@@ -25,7 +25,7 @@ def transcribe_audio_file(uploaded_file):
         audio_segment = AudioSegment.from_file(io.BytesIO(audio_data))
         audio_segment.export(temp_audio_path, format="wav")
 
-        with sr.AudioFile(uploaded_file) as source:
+        with sr.AudioFile(temp_audio_path) as source:
             st.info("Đang xử lý file âm thanh...")
             audio = r.record(source) # Đọc toàn bộ file âm thanh
 
