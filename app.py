@@ -2,7 +2,7 @@ import streamlit as st
 import speech_recognition as sr
 import librosa
 import soundfile as sf
-import pyaudio
+from streamlit_mic_recorder import mic_recorder
 import io
 import os
 from docx import Document # Thư viện cho file .docx
@@ -59,32 +59,7 @@ def transcribe_audio_file(uploaded_file):
             os.remove(temp_input_path)
         if os.path.exists(temp_wav_path):
             os.remove(temp_wav_path)
-
-def transcribe_from_microphone():
-    """Ghi âm từ micro và chuyển đổi thành văn bản."""
-    with sr.Microphone() as source:
-        st.info("Bấm vào nút **'Bắt đầu ghi âm'** và nói rõ ràng.")
-        st.info("Đang lắng nghe... Vui lòng nói trong 5 giây.")
-        
-        # Điều chỉnh độ nhạy (quan trọng để loại bỏ tiếng ồn ban đầu)
-        r.adjust_for_ambient_noise(source, duration=0.5) 
-        
-        # Ghi âm trong 5 giây
-        try:
-            audio = r.listen(source, timeout=5, phrase_time_limit=5)
-            st.success("Đã hoàn thành ghi âm. Đang xử lý...")
-            
-            # Sử dụng Google Web Speech API
-            text = r.recognize_google(audio, language="vi-VN")
-            return text
-        
-        except sr.WaitTimeoutError:
-            return "Không tìm thấy giọng nói trong thời gian cho phép."
-        except sr.UnknownValueError:
-            return "Không thể nhận dạng giọng nói."
-        except sr.RequestError as e:
-            return f"Lỗi kết nối hoặc API: {e}"
-          
+       
 def create_docx(text, filename="transcribed_document.docx"):
     """Tạo một file DOCX từ văn bản đã chuyển đổi và trả về dưới dạng bytes."""
     document = Document()
@@ -120,10 +95,47 @@ def main():
             transcribed_text = transcribe_audio_file(uploaded_file)
           
   elif method == 'Ghi âm trực tiếp từ Micro':
-    if st.button('🎙️ Bắt đầu ghi âm (5 giây)'):
-        # Biến trạng thái để hiển thị thông báo trong quá trình xử lý
-        with st.spinner('Đang ghi âm và xử lý...'):
-            transcribed_text = transcribe_from_microphone()
+    st.subheader("🎙️ Ghi Âm Trực Tiếp")
+    st.caption("Sử dụng micro của trình duyệt (thay thế cho PyAudio).")
+
+    # Sử dụng mic_recorder để ghi âm và trả về audio buffer
+    audio_data = mic_recorder(
+        start_prompt="Bắt đầu Ghi Âm",
+        stop_prompt="Dừng Ghi Âm",
+        key='mic_recorder',
+        format="wav" # Quan trọng: Giúp SpeechRecognition xử lý tốt nhất
+    )
+
+    if audio_data:
+        st.session_state.audio_buffer = audio_data['bytes']
+        st.audio(st.session_state.audio_buffer, format='audio/wav') # Hiển thị player
+        
+    if st.session_state.audio_buffer is not None and st.button('✅ Chuyển đổi Giọng nói'):
+        
+        # Tạo file WAV tạm thời từ buffer
+        temp_wav_path = "mic_recording_temp.wav"
+        try:
+            with open(temp_wav_path, "wb") as f:
+                f.write(st.session_state.audio_buffer)
+
+            # Sử dụng SpeechRecognition với file WAV tạm thời
+            r = sr.Recognizer()
+            with sr.AudioFile(temp_wav_path) as source:
+                st.info("Đang nhận dạng giọng nói...")
+                audio = r.record(source) 
+
+            transcribed_text = r.recognize_google(audio, language="vi-VN")
+
+        except sr.UnknownValueError:
+            transcribed_text = "Không thể nhận dạng giọng nói."
+        except sr.RequestError as e:
+            transcribed_text = f"Lỗi kết nối hoặc API: {e}"
+        finally:
+            # Xóa file tạm thời
+            if os.path.exists(temp_wav_path):
+                os.remove(temp_wav_path)
+            # Xóa buffer sau khi xử lý xong
+            st.session_state.audio_buffer = None
           
   # --- Hiển thị Kết quả và Tùy chọn Tải xuống ---
   if transcribed_text:
