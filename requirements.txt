@@ -3,4 +3,4 @@ speechrecognition
 docx
 librosa
 soundfile
-pyaudio
+pyAudio
