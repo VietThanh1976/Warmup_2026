@@ -24,6 +24,7 @@ def transcribe_audio_file(uploaded_file):
     
     try:
         # 1. Lưu file đã tải lên vào tệp tạm thời
+        st.info("Đang mở file tạm....")
         with open(temp_input_path, "wb") as f:
             f.write(uploaded_file.getbuffer())
 
