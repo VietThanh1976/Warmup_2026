@@ -1,6 +1,7 @@
 import streamlit as st
 import speech_recognition as sr
-from pydub import AudioSegment
+import librosa
+import soundfile as sf
 import io
 import os
 from docx import Document # Thư viện cho file .docx
@@ -14,22 +15,33 @@ st.title("🎤 Ứng Dụng Chuyển Giọng Nói Thành Văn Bản")
 st.markdown("Sử dụng **Streamlit** và thư viện **SpeechRecognition**")
 
 def transcribe_audio_file(uploaded_file):
-    """Xử lý và chuyển đổi file âm thanh đã tải lên thành văn bản."""
-    # Lưu file đã tải lên vào một tệp tạm thời
-    temp_audio_path = "temp_audio.wav"
+    """
+    Sử dụng librosa và soundfile để xử lý các loại file âm thanh (MP3, WAV,...) 
+    và chuyển đổi thành văn bản.
+    """
+    temp_input_path = "temp_input_audio" + os.path.splitext(uploaded_file.name)[1]
+    temp_wav_path = "temp_converted_audio.wav"
     
-    # Sử dụng pydub để đảm bảo định dạng là WAV (nếu là mp3, pydub sẽ xử lý)
     try:
-        # Đọc dữ liệu từ Streamlit UploadedFile
-        audio_data = uploaded_file.read()
-        audio_segment = AudioSegment.from_file(io.BytesIO(audio_data))
-        audio_segment.export(temp_audio_path, format="wav")
+        # 1. Lưu file đã tải lên vào tệp tạm thời
+        with open(temp_input_path, "wb") as f:
+            f.write(uploaded_file.getbuffer())
 
-        with sr.AudioFile(temp_audio_path) as source:
-            st.info("Đang xử lý file âm thanh...")
-            audio = r.record(source) # Đọc toàn bộ file âm thanh
+        st.info("Đang xử lý và chuyển đổi định dạng âm thanh...")
 
-        # Sử dụng Google Web Speech API để chuyển đổi (hỗ trợ tiếng Việt)
+        # 2. Đọc file bằng librosa (hỗ trợ nhiều định dạng)
+        # y: mảng dữ liệu âm thanh, sr_librosa: tần số lấy mẫu
+        y, sr_librosa = librosa.load(temp_input_path, sr=None) 
+
+        # 3. Ghi dữ liệu âm thanh thành tệp WAV tạm thời bằng soundfile
+        sf.write(temp_wav_path, y, sr_librosa)
+        
+        # 4. Sử dụng SpeechRecognition với tệp WAV
+        with sr.AudioFile(temp_wav_path) as source:
+            st.info("Đang nhận dạng giọng nói...")
+            audio = r.record(source) 
+
+        # Sử dụng Google Web Speech API để chuyển đổi (tiếng Việt)
         text = r.recognize_google(audio, language="vi-VN")
         return text
     
@@ -40,9 +52,11 @@ def transcribe_audio_file(uploaded_file):
     except Exception as e:
         return f"Lỗi xử lý tệp: {e}. Vui lòng kiểm tra file đầu vào."
     finally:
-        # Xóa file tạm thời
-        if os.path.exists(temp_audio_path):
-            os.remove(temp_audio_path)
+        # Xóa các file tạm thời
+        if os.path.exists(temp_input_path):
+            os.remove(temp_input_path)
+        if os.path.exists(temp_wav_path):
+            os.remove(temp_wav_path)
 
 def transcribe_from_microphone():
     """Ghi âm từ micro và chuyển đổi thành văn bản."""
