@@ -1,5 +1,6 @@
 import streamlit as st
 import speech_recognition as sr
+from pydub import AudioSegment
 import io
 import os
 from docx import Document # Thư viện cho file .docx
