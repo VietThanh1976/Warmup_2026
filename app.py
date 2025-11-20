@@ -1,11 +1,21 @@
 import streamlit as st
 
-st.write('Hello')
-st.write(55)
-st.divider()
-file = st.file_uploader(
-  "Upload your file",
-  type=["pdf", "docx", "wav"]
-)
-if file:
-  st.write(f"{file}")
+def fact(n):
+  if n == 0 or n == 1:
+    return 1
+  else:
+    return n*fact(n-1)
+  
+def main():
+  st.title("Tính Giai Thừa")
+  st.number_input(
+    "Nhập vào một số:",
+    min_value = 0,
+    max_value = 200
+  )
+  if st.button("Tính toán"):
+    result = fact(number)
+    st.write(f"Gia thua của {number} la {result}")
+if __name__=="__main__":
+  main()
+  
