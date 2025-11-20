@@ -8,7 +8,7 @@ def fact(n):
   
 def main():
   st.title("Tính Giai Thừa")
-  st.number_input(
+  number = st.number_input(
     "Nhập vào một số:",
     min_value = 0,
     max_value = 200
