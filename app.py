@@ -157,9 +157,9 @@ def main():
 
                     st.session_state.last_transcription_text = result_text
                     
-                except Exception as e:
+               except Exception as e:
                     st.session_state.last_transcription_text = f"Lỗi xử lý: {e}"
-                finally:
+               finally:
                     if os.path.exists(temp_wav_path):
                         os.remove(temp_wav_path)
                     # Giữ lại audio_buffer để người dùng có thể tải xuống sau khi chuyển đổi
