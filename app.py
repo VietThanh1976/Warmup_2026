@@ -5,9 +5,7 @@ import soundfile as sf
 from streamlit_mic_recorder import mic_recorder
 import io
 import os
-#from docx import Document # Thư viện cho file .docx
-import docx
-import Document
+from docx import Document # Thư viện cho file .docx
 import time
 
 # =========================================================================
